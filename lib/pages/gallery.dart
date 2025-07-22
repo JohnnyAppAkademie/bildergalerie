@@ -1,5 +1,6 @@
 import 'package:bildergalerie/logic/Widget/appbar.dart';
 import 'package:bildergalerie/logic/classes/gallery_item.dart';
+import 'package:bildergalerie/pages/details.dart';
 import 'package:flutter/material.dart';
 
 class MyGallery extends StatefulWidget {
@@ -60,7 +61,7 @@ class _MyGalleryState extends State<MyGallery> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 226, 170, 170),
+      backgroundColor: const Color.fromARGB(255, 240, 199, 199),
       appBar: CustomAppBar(
         title: "MyGallery",
         navPage: false,
@@ -89,56 +90,26 @@ class _MyGalleryState extends State<MyGallery> {
     );
   }
 
+  int calculateCrossAxisCount(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    if (width < 400) return 2; // kleines Handy
+    if (width < 600) return 3; // normales Handy
+    return 4; // Tablet
+  }
+
   Widget sightGridView(List<GalleryItem> galleryData) {
     return GridView.builder(
       itemCount: galleryData.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: calculateCrossAxisCount(context),
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        childAspectRatio: 1,
+        childAspectRatio: 0.75,
       ),
       itemBuilder: (context, index) {
         final item = galleryData[index];
         //  Button für Details  //
-        return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          onPressed: () => {},
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              //  Image
-              const SizedBox(height: 8),
-              Expanded(
-                child: Image.asset(
-                  item.imagePath,
-                  fit: BoxFit.cover, // passt sich automatisch an
-                ),
-              ),
-              //  Text
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text(
-                  item.imageTitle,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  overflow: TextOverflow.ellipsis, // verhindert Überlauf
-                ),
-              ),
-            ],
-          ),
-        );
+        return fotoCard(item);
       },
     );
   }
@@ -148,44 +119,60 @@ class _MyGalleryState extends State<MyGallery> {
       itemCount: galleryData.length,
       itemBuilder: (context, index) {
         final item = galleryData[index];
-        //  Button für Details  //
-        return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          onPressed: () => {},
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              //  Image
-              const SizedBox(height: 8),
-              Image.asset(
-                item.imagePath,
-                fit: BoxFit.cover, // passt sich automatisch an
-              ),
-              //  Text
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text(
-                  item.imageTitle,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  overflow: TextOverflow.ellipsis, // verhindert Überlauf
-                ),
-              ),
-            ],
-          ),
+        return fotoCard(item);
+      },
+    );
+  }
+
+  Widget fotoCard(GalleryItem item) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        padding: EdgeInsets.zero,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyDetails(galleryItem: item)),
         );
       },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min, // ← verhindert überflüssige Höhe
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: AspectRatio(
+                aspectRatio: 1, // ← Bild bleibt quadratisch & kompakt
+                child: Image.asset(item.imagePath, fit: BoxFit.cover),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 6.0,
+              ),
+              child: Text(
+                item.imageTitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
