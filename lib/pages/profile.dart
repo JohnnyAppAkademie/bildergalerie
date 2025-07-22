@@ -21,7 +21,7 @@ class _MyProfilState extends State<MyProfil> {
 
   @override
   void dispose() {
-    _scrollController.dispose(); // wichtig: aufräumen
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -49,8 +49,7 @@ class _MyProfilState extends State<MyProfil> {
                 Expanded(
                   child: Scrollbar(
                     controller: _scrollController,
-                    thumbVisibility: false, // immer sichtbar (optional)
-                    interactive: true, // Material 3: "greifbar"
+                    thumbVisibility: false,
                     radius: const Radius.circular(10),
                     thickness: 8,
                     child: SingleChildScrollView(
