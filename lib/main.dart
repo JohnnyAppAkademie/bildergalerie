@@ -1,4 +1,4 @@
-import 'package:bildergalerie/pages/gallery.dart';
+import 'package:bildergalerie/pages/main_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,6 +10,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: MyGallery());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      color: Color.fromARGB(255, 240, 199, 199),
+      home: MyHomePage(),
+    );
   }
 }

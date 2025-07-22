@@ -21,7 +21,7 @@ class MyDetails extends StatelessWidget {
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: 200,
+                height: 400,
                 child: Image.asset(galleryItem.imagePath, fit: BoxFit.cover),
               ),
               Text(
