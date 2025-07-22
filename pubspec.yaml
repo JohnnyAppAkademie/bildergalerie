@@ -19,11 +19,11 @@ flutter:
   uses-material-design: true
   assets:
     - assets/files/t.txt
-    - assets/pictures/basketball_1.jpeg
-    - assets/pictures/basketball_2.jpeg
-    - assets/pictures/bike.jpeg
-    - assets/pictures/kaya.jpeg
-    - assets/pictures/running.jpeg
-    - assets/pictures/soccer.jpeg
-    - assets/pictures/tennis_1.jpeg
-    - assets/pictures/tennis_2.jpeg
+    - assets/images/basketball_1.jpeg
+    - assets/images/basketball_2.jpeg
+    - assets/images/bike.jpeg
+    - assets/images/kaya.jpeg
+    - assets/images/running.jpeg
+    - assets/images/soccer.jpeg
+    - assets/images/tennis_1.jpeg
+    - assets/images/tennis_2.jpeg
