@@ -1,7 +1,9 @@
 import 'package:bildergalerie/logic/Widget/appbar.dart';
+import 'package:bildergalerie/logic/Widget/foto_card.dart';
 import 'package:bildergalerie/logic/classes/gallery_item.dart';
-import 'package:bildergalerie/pages/details.dart';
+import 'package:bildergalerie/logic/style/style_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyGallery extends StatefulWidget {
   const MyGallery({super.key});
@@ -11,12 +13,14 @@ class MyGallery extends StatefulWidget {
 }
 
 class _MyGalleryState extends State<MyGallery> {
+  /*  Ist GridView aktiv? */
   bool gridView = true;
 
+  /*  Daten für die Galerie */
   final List<GalleryItem> galleryData = [
     GalleryItem(
       imageTitle: 'Bunter Basketball',
-      imageDate: '03.06.2023',
+      imageDate: '03.07.2025',
       imageDescription:
           'Ein farbenfrohes Basketballfeld im Freien. Im Zentrum steht ein Basketballkorb, dessen weißes Netz im leichten Wind schaukelt. Die Farben des Spielfelds leuchten unter der warmen Abendsonne. Vor vielen Jahren, während eines Sommerabends, trafen sich hier Freunde zu einem unvergesslichen Spiel, bei dem die Sieger den Sonnenuntergang bejubelten.',
       imagePath: 'assets/images/basketball_1.jpeg',
@@ -60,23 +64,28 @@ class _MyGalleryState extends State<MyGallery> {
 
   @override
   Widget build(BuildContext context) {
+    final style = Provider.of<StyleManager>(context).style; //  StyleManager
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 240, 199, 199),
+      backgroundColor: style.background,
       appBar: CustomAppBar(
         title: "MyGallery",
         navPage: false,
         view: true,
-        onViewList: () => setState(() => gridView = false),
-        onViewGrid: () => setState(() => gridView = true),
+        isGridView: gridView, //  Status der Übersicht weitergeben
+        onViewList: () => setState(() => gridView = false), // Setzen der
+        onViewGrid: () => setState(() => gridView = true), // Gridview
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
+        /*  Animation für's Wechseln */
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 500),
           transitionBuilder: (Widget child, Animation<double> animation) {
             return FadeTransition(opacity: animation, child: child);
           },
           child: gridView
+              // Zuverlässige Unterscheidung beider Widgets
               ? KeyedSubtree(
                   key: const ValueKey('grid'),
                   child: sightGridView(galleryData),
@@ -94,7 +103,8 @@ class _MyGalleryState extends State<MyGallery> {
     double width = MediaQuery.of(context).size.width;
     if (width < 400) return 2; // kleines Handy
     if (width < 600) return 3; // normales Handy
-    return 4; // Tablet
+    if (width < 800) return 4; // Tablet
+    return 5; // Bildschirm
   }
 
   Widget sightGridView(List<GalleryItem> galleryData) {
@@ -109,7 +119,7 @@ class _MyGalleryState extends State<MyGallery> {
       itemBuilder: (context, index) {
         final item = galleryData[index];
         //  Button für Details  //
-        return fotoCard(item);
+        return fotoCard(context, item, compact: false);
       },
     );
   }
@@ -119,60 +129,8 @@ class _MyGalleryState extends State<MyGallery> {
       itemCount: galleryData.length,
       itemBuilder: (context, index) {
         final item = galleryData[index];
-        return fotoCard(item);
+        return fotoCard(context, item, compact: true);
       },
-    );
-  }
-
-  Widget fotoCard(GalleryItem item) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        padding: EdgeInsets.zero,
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MyDetails(galleryItem: item)),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min, // ← verhindert überflüssige Höhe
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: AspectRatio(
-                aspectRatio: 1, // ← Bild bleibt quadratisch & kompakt
-                child: Image.asset(item.imagePath, fit: BoxFit.cover),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 6.0,
-              ),
-              child: Text(
-                item.imageTitle,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -1,19 +1,29 @@
+import 'package:bildergalerie/logic/style/style_manager.dart';
 import 'package:bildergalerie/pages/main_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    /*  Provider für den Style-Manager */
+    ChangeNotifierProvider(create: (_) => StyleManager(), child: const MyApp()),
+  );
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      color: Color.fromARGB(255, 240, 199, 199),
-      home: MyHomePage(),
+    return Consumer<StyleManager>(
+      builder: (context, styleManager, _) {
+        final style = styleManager.style;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: MyHomePage(),
+          theme: ThemeData(scaffoldBackgroundColor: style.background),
+        );
+      },
     );
   }
 }

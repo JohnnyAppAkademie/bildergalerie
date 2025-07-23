@@ -1,6 +1,9 @@
 import 'package:bildergalerie/logic/Widget/appbar.dart';
+import 'package:bildergalerie/logic/Widget/text_container.dart';
+import 'package:bildergalerie/logic/style/style_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:provider/provider.dart';
 
 class MyProfil extends StatefulWidget {
   const MyProfil({super.key});
@@ -12,6 +15,7 @@ class MyProfil extends StatefulWidget {
 class _MyProfilState extends State<MyProfil> {
   final ScrollController _scrollController = ScrollController();
   late Future<String> _fileContent;
+  bool lightMode = true;
 
   @override
   void initState() {
@@ -27,25 +31,28 @@ class _MyProfilState extends State<MyProfil> {
 
   @override
   Widget build(BuildContext context) {
+    final style = Provider.of<StyleManager>(context).style;
+
     return FutureBuilder<String>(
+      /*  Zum Lesen der Datei */
       future: _fileContent,
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        /*  Nachdem gelesen wurde */
         return Scaffold(
-          appBar: const CustomAppBar(
-            title: "Profile",
-            navPage: false,
-            view: false,
-          ),
+          backgroundColor: style.background,
+          appBar: CustomAppBar(title: "Profile", navPage: false, view: false),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 const SizedBox(height: 10),
+                /*  Profilbild  */
                 const CircleAvatar(
                   backgroundImage: AssetImage("assets/images/kaya.jpeg"),
                   radius: 100,
                 ),
                 const SizedBox(height: 10),
+                /*  Scrollable Text */
                 Expanded(
                   child: Scrollbar(
                     controller: _scrollController,
@@ -55,11 +62,7 @@ class _MyProfilState extends State<MyProfil> {
                     child: SingleChildScrollView(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(10),
-                      child: Text(
-                        snapshot.data ?? 'Loading...',
-                        style: const TextStyle(fontSize: 14),
-                        textAlign: TextAlign.center,
-                      ),
+                      child: TextContainer(text: snapshot.data ?? 'Loading...'),
                     ),
                   ),
                 ),
