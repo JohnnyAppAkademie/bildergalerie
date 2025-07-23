@@ -47,7 +47,7 @@ class _MyDetailsState extends State<MyDetails> {
               Text(
                 galleryItem.imageTitle,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
